@@ -1,0 +1,176 @@
+[
+    {
+        "attributes": ["61b43f272a552bc170499495", "61b43f272a552bc170499496"],
+        "img": "./images/1.jpg",
+        "name": "accent chair",
+        "price": 25,
+        "company": "marcos",
+        "rating": 4
+    },
+    {
+        "attributes": ["61b43f272a552bc170499495"],
+        "img": "./images/2.jpg",
+        "name": "albany sectional",
+        "price": 109,
+        "company": "liddy",
+        "rating": 5
+    },
+    {
+        "attributes": ["61b43f272a552bc170499496"],
+        "img": "./images/3.jpg",
+        "name": "albany table",
+        "price": 309,
+        "company": "liddy",
+        "rating": 4.9
+    },
+    {
+        "attributes": [],
+        "img": "./images/4.jpg",
+        "name": "armchair",
+        "price": 125,
+        "company": "marcos",
+        "rating": 4.8
+    },
+    {
+        "attributes": [],
+        "img": "./images/5.jpg",
+        "name": "bar stool",
+        "price": 40,
+        "company": "liddy",
+        "rating": 4.6
+    },
+    {
+        "attributes": [],
+        "img": "./images/6.jpg",
+        "name": "dining table",
+        "price": 42,
+        "company": "ikea",
+        "rating": 4.55
+    },
+    {
+        "attributes": [],
+        "img": "./images/7.jpg",
+        "name": "emperor bed",
+        "price": 23,
+        "company": "ikea"
+    },
+    {
+        "attributes": [],
+        "img": "./images/8.jpg",
+        "name": "entertainment center",
+        "price": 59,
+        "featured": true,
+        "company": "caressa"
+    },
+    {
+        "attributes": [],
+        "img": "./images/9.jpg",
+        "name": "high-back bench",
+        "price": 39,
+        "featured": true,
+        "company": "ikea"
+    },
+    {
+        "attributes": [],
+        "img": "./images/10.jpg",
+        "name": "leather sofa",
+        "price": 99,
+        "company": "caressa"
+    },
+    {
+        "attributes": [],
+        "img": "./images/11.jpg",
+        "name": "modern bookshelf",
+        "price": 31,
+        "featured": true,
+        "company": "caressa"
+    },
+    {
+        "attributes": [],
+        "img": "./images/12.jpg",
+        "name": "modern poster",
+        "price": 30,
+        "company": "liddy"
+    },
+    {
+        "attributes": [],
+        "img": "./images/1.jpg",
+        "name": "shelf",
+        "price": 30,
+        "company": "ikea"
+    },
+    {
+        "attributes": [],
+        "img": "./images/2.jpg",
+        "name": "simple chair",
+        "price": 109,
+        "company": "liddy"
+    },
+    {
+        "attributes": [],
+        "img": "./images/3.jpg",
+        "name": "sofa set",
+        "price": 129,
+        "company": "marcos"
+    },
+    {
+        "attributes": [],
+        "img": "./images/4.jpg",
+        "name": "suede armchair",
+        "price": 15,
+        "company": "caressa"
+    },
+    {
+        "attributes": [],
+        "img": "./images/5.jpg",
+        "name": "utopia sofa",
+        "price": 79,
+        "featured": true,
+        "company": "liddy"
+    },
+    {
+        "attributes": [],
+        "img": "./images/6.jpg",
+        "name": "vase table",
+        "price": 120,
+        "featured": true,
+        "company": "marcos"
+    },
+    {
+        "attributes": [],
+        "img": "./images/7.jpg",
+        "name": "wooden bed",
+        "price": 25,
+        "company": "ikea"
+    },
+    {
+        "attributes": [],
+        "img": "./images/8.jpg",
+        "name": "wooden desk",
+        "price": 15,
+        "company": "ikea"
+    },
+    {
+        "attributes": [],
+        "img": "./images/9.jpg",
+        "name": "wooden desk",
+        "price": 40,
+        "company": "ikea"
+    },
+    {
+        "attributes": [],
+        "img": "./images/10.jpg",
+        "name": "wooden table",
+        "price": 23,
+        "featured": true,
+        "company": "caressa"
+    },
+    {
+        "attributes": [],
+        "img": "./images/11.jpg",
+        "name": "a first wooden table",
+        "price": 23,
+        "featured": true,
+        "company": "caressa"
+    }
+]

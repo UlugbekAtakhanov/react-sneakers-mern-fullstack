@@ -1,0 +1,34 @@
+[
+    {
+        "name": "color",
+        "value": "red"
+    },
+    {
+        "name": "color",
+        "value": "black"
+    },
+    {
+        "name": "color",
+        "value": "blue"
+    },
+    {
+        "name": "size",
+        "value": "40"
+    },
+    {
+        "name": "size",
+        "value": "41"
+    },
+    {
+        "name": "size",
+        "value": "42"
+    },
+    {
+        "name": "size",
+        "value": "43"
+    },
+    {
+        "name": "size",
+        "value": "44"
+    }
+]

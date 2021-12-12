@@ -1,0 +1,55 @@
+import React, {useState, useEffect} from 'react'
+import { Link } from 'react-router-dom'
+import axios from 'axios'
+import { useGlobalContext } from '../context'
+
+const url = "http://localhost:5000/api/v1/login"
+
+
+const Login = ({history}) => {
+    const {dispatch} = useGlobalContext()
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [error, setError] = useState("")
+
+    useEffect(() => {
+        if (localStorage.getItem("authToken")) {
+            return history.push("/products")
+        }
+    }, [history])
+
+    const loginHandler = async (e) => {
+        e.preventDefault()
+        try {
+            const data = await axios.post(url, {email, password})
+            localStorage.setItem("authToken", data.data.token)
+            // console.log(data.data.token);
+            dispatch({type: "GET_USER", data: data.data.user})
+            history.push("/products")
+        } catch (error) {
+            setError(error.response.data.msg)
+            setTimeout(() => {
+                setError("")
+                setEmail("")
+                setPassword("")
+            }, 3000);
+        }
+    }
+
+    return (
+        <div className = "py-10">
+            <div className = "p-8 grid place-items-center">
+                <form onSubmit = {loginHandler} className = "border border-red-500 rounded-md grid place-items-center gap-4 p-8 w-1/3">
+                    <h3>Login</h3>
+                    {error && <small className = "bg-red-500 text-white p-2 rounded text-center">{error}</small>}
+                    <input value = {email} onChange = {(e) => setEmail(e.target.value)} className = "border rounded outline-none text-gray-500 p-2 w-full" type="email" name="email" id="email" placeholder = "email.." />
+                    <input value = {password} onChange = {(e) => setPassword(e.target.value)} className = "border rounded outline-none text-gray-500 p-2 w-full" type="password" name="password" id="password" placeholder = "password.." />
+                    <button type = "submit" className = "border w-full bg-red-500 py-1 text-white rounded">log in</button>
+                    <Link to = "/register" className = "text-sm underline text-gray-500" >Sign up</Link>
+                </form>
+            </div>
+        </div>
+    )
+}
+
+export default Login
