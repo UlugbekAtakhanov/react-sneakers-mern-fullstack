@@ -24,9 +24,9 @@ const reducer = (state, action) => {
     if (action.type === "ADD_TO_CART") {
         return {...state, cart: [...state.cart, action.data], errorCartProducts: ""}
     }
-    if (action.type === "DELETE_FROM_CART") {
-        return {...state, cart: action.data, itemFromCartId: action.id}
-    }
+    // if (action.type === "DELETE_FROM_CART") {
+    //     return {...state, cart: action.data, itemFromCartId: action.id}
+    // }
     if (action.type === "ITEM_IS_IN_CART") {
         return {...state, isInCart: true}
     }
@@ -37,9 +37,9 @@ const reducer = (state, action) => {
     if (action.type === "ADD_TO_FAVORITE") {
         return {...state, allFavorites: [...state.allFavorites, action.data]}
     }
-    if (action.type === "DELETE_FROM_FAVORITE") {
-        return {...state, allFavorites: action.data}
-    }
+    // if (action.type === "DELETE_FROM_FAVORITE") {
+    //     return {...state, allFavorites: action.data}
+    // }
 
 
     if (action.type === "ERROR_ALL_PRODUCTS") {

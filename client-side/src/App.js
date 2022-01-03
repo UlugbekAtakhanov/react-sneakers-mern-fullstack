@@ -1,5 +1,5 @@
 import React from 'react'
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 
 // Pages
 import Products from './pages/Products';
@@ -10,7 +10,7 @@ import HomePage from './pages/HomePage';
 import SingleProduct from './pages/SingleProduct/SingleProduct';
 
 
-function App() {
+function App({history}) {
 
   return (
     <div className="App">

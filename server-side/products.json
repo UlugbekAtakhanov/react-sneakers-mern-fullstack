@@ -1,6 +1,6 @@
 [
     {
-        "attributes": ["61b43f272a552bc170499495", "61b43f272a552bc170499496"],
+        "attributes": ["61c03d02c87f86c333ea98f9", "61c03d02c87f86c333ea98fa"],
         "img": "./images/1.jpg",
         "name": "accent chair",
         "price": 25,
@@ -8,7 +8,7 @@
         "rating": 4
     },
     {
-        "attributes": ["61b43f272a552bc170499495"],
+        "attributes": ["61c03d02c87f86c333ea98fa"],
         "img": "./images/2.jpg",
         "name": "albany sectional",
         "price": 109,
@@ -16,7 +16,7 @@
         "rating": 5
     },
     {
-        "attributes": ["61b43f272a552bc170499496"],
+        "attributes": ["61c03d02c87f86c333ea98f9"],
         "img": "./images/3.jpg",
         "name": "albany table",
         "price": 309,

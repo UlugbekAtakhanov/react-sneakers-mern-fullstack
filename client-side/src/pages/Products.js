@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react'
+import {useNavigate} from "react-router-dom"
 import Card from "../components/Card/Card";
 import Drawer from '../components/Cart/Drawer';
 import Header from '../components/Header/Header';
@@ -8,6 +9,7 @@ import axios from 'axios'
 const url = "http://localhost:5000/api/v1/"
 
 const Home = ({history}) => {
+    const navigate = useNavigate()
 
     const {search, isCartOpen, allProducts, dispatch, errorAllProducts} = useGlobalContext()
     const [searchTerm, setSearchTerm] = useState("")
@@ -17,7 +19,7 @@ const Home = ({history}) => {
         const fetchAllProducts = async () => {
             const token = localStorage.getItem("authToken")
             if (!token) {
-                return history.push("/login")
+                return navigate("/login")
             }
             const config = {
                 headers: {
@@ -40,7 +42,7 @@ const Home = ({history}) => {
         }
         
         fetchAllProducts()
-    }, [dispatch, history, search])
+    }, [dispatch, navigate, search])
 
     useEffect(() => {
         const fetchCartProducts = async () => {
@@ -57,7 +59,8 @@ const Home = ({history}) => {
                     // console.log(cartProductFromDB);
                     dispatch({type: "GET_CART", data:cartProductFromDB})
                 } catch (error) {
-                    console.log(error);
+                    console.log(error.response);
+                    dispatch({type: "ERROR_CART_PRODUCTS", msg: error.response.data.msg})
                 }
             }
         }

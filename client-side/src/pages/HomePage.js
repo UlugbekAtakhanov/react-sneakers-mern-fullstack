@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios'
 import {useGlobalContext} from "../context"
 import { Link } from 'react-router-dom'
@@ -6,13 +7,14 @@ import { Link } from 'react-router-dom'
 const url = "http://localhost:5000/api/v1"
 
 
-const HomePage = ({history}) => {
+const HomePage = () => {
     
     const {dispatch} = useGlobalContext()
+    const navigate = useNavigate()
 
     useEffect(() => {
         if (!localStorage.getItem("authToken")) {
-            return history.push("/login")
+            return navigate("/login")
         }
         
         const fetchUser = async () => {
@@ -30,7 +32,7 @@ const HomePage = ({history}) => {
             }
         }
         fetchUser()
-    }, [history, dispatch])
+    }, [navigate, dispatch])
 
     return (
         <div className = "p-4">

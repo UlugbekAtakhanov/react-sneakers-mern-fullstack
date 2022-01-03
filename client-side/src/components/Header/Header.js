@@ -1,15 +1,17 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import {Link} from 'react-router-dom'
 import { useGlobalContext } from '../../context'
 import "./Header.scss"
 
-const Header = ({history}) => {
+const Header = () => {
+    const navigate = useNavigate()
     const {setIsCartOpen, dispatch} = useGlobalContext()
 
     const logOutHandler = () => {
         localStorage.removeItem("authToken")
         dispatch({type: "LOG_OUT"})
-        history.push("/login")
+        navigate("/login")
     }
 
     return (

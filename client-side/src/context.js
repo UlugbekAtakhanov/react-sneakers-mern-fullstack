@@ -1,4 +1,5 @@
 import React, { useContext, useReducer, useState, useEffect } from 'react'
+// import { useNavigate } from 'react-router-dom';
 import reducer from './reducer';
 import axios from 'axios';
 
@@ -7,6 +8,8 @@ const AppContext = React.createContext();
 const url = "http://localhost:5000/api/v1"
 
 const AppProvider = ( {children, history} ) => {
+
+    // const navigate = useNavigate()
 
     const initialState = {
         isLoading: true,
@@ -22,7 +25,7 @@ const AppProvider = ( {children, history} ) => {
         
 
 
-        cart: [],
+        cart: [], // it contains all info about user's cart..
         cartTotal: 0,
 
         allFavorites: []
@@ -32,6 +35,7 @@ const AppProvider = ( {children, history} ) => {
     const [isCartOpen, setIsCartOpen] = useState(false)
     const [itemFromCartId, setItemFromCartId] = useState("")
     const [cartTotal, setCartTotal] = useState(0)
+
 
     useEffect(() => {
         const fetchAllProducts = async () => {
@@ -59,6 +63,8 @@ const AppProvider = ( {children, history} ) => {
 
     }, [dispatch, history, state.search])
 
+    // console.log(state.cart);
+
     useEffect(() => {
         const fetchCartProducts = async () => {
             const token = localStorage.getItem("authToken")
@@ -69,12 +75,11 @@ const AppProvider = ( {children, history} ) => {
             }
             if (token) {
                 try {
-                    const data = await axios.get(url + "/cart", config)
-                    const cartProductFromDB = data.data
-                    // console.log(cartProductFromDB);
-                    dispatch({type: "GET_CART", data:cartProductFromDB})
+                    const {data} = await axios.get(url + "/cart", config)
+                    dispatch({type: "GET_CART", data})
                 } catch (error) {
-                    console.log(error);
+                    // console.log(error.response.data.msg);
+                    dispatch({type: "ERROR_CART_PRODUCTS", msg: error.response.data.msg})
                 }
             }
         }
@@ -105,6 +110,7 @@ const AppProvider = ( {children, history} ) => {
 
     return (
         <AppContext.Provider value={{
+            // navigate,
             ...state ,
             dispatch,
             isCartOpen, setIsCartOpen,

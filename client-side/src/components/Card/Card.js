@@ -16,29 +16,29 @@ const Card = ({item}) => {
     const [isInFavorite, setIsInFavorite] = useState(false)
 
 
-    useEffect(() => {
-        setIsInCart(false)
-        cart.find(cartItem => {
-            if (cartItem.product._id === itemFromCartId) {
-                return setIsInCart(false)
-            }
-            if (cartItem.product._id === item._id) {
-                return setIsInCart(true)
-            }
-            return null
+    // useEffect(() => {
+    //     setIsInCart(false)
+    //     cart.find(cartItem => {
+    //         if (cartItem.product._id === itemFromCartId) {
+    //             return setIsInCart(false)
+    //         }
+    //         if (cartItem.product._id === item._id) {
+    //             return setIsInCart(true)
+    //         }
+    //         return null
 
-        })
-    }, [cart, item._id, itemFromCartId])
+    //     })
+    // }, [cart, item._id, itemFromCartId])
 
-    useEffect(() => {
-        setIsInFavorite(false)
-        allFavorites.find(favItem => {
-            if (favItem.product._id === item._id) {
-                return setIsInFavorite(true)
-            }
-            return null
-        })
-    }, [allFavorites, item._id])
+    // useEffect(() => {
+    //     setIsInFavorite(false)
+    //     allFavorites.find(favItem => {
+    //         if (favItem.product._id === item._id) {
+    //             return setIsInFavorite(true)
+    //         }
+    //         return null
+    //     })
+    // }, [allFavorites, item._id])
 
 
     // const addToCart = async (product) => {

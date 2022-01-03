@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react'
+import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 import { useGlobalContext } from '../context'
@@ -7,6 +8,7 @@ const url = "http://localhost:5000/api/v1/login"
 
 
 const Login = ({history}) => {
+    const navigate = useNavigate()
     const {dispatch} = useGlobalContext()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -14,9 +16,9 @@ const Login = ({history}) => {
 
     useEffect(() => {
         if (localStorage.getItem("authToken")) {
-            return history.push("/products")
+            return navigate("/products")
         }
-    }, [history])
+    }, [navigate])
 
     const loginHandler = async (e) => {
         e.preventDefault()
@@ -25,7 +27,7 @@ const Login = ({history}) => {
             localStorage.setItem("authToken", data.data.token)
             // console.log(data.data.token);
             dispatch({type: "GET_USER", data: data.data.user})
-            history.push("/products")
+            navigate("/products")
         } catch (error) {
             setError(error.response.data.msg)
             setTimeout(() => {

@@ -1,10 +1,12 @@
 import React, {useState, useEffect} from 'react'
+import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 
 const url = "http://localhost:5000/api/v1/register"
 
-const Register = ({history}) => {
+const Register = () => {
+    const navigate = useNavigate()
     const [username, setUsername] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -12,21 +14,22 @@ const Register = ({history}) => {
 
     useEffect(() => {
         if (localStorage.getItem("authToken")) {
-            return history.push("/products")
+            return navigate("/products")
         }
-    }, [history])
+    }, [navigate])
 
     const registerHandler = async (e) => {
         e.preventDefault()
         try {
             const {data} = await axios.post(url, {username, email, password})
             localStorage.setItem("authToken", data)
-            history.push("/products")
+            navigate("/products")
         } catch (error) {
-            setError(error.response.data.msg)
-            setTimeout(() => {
-                setError("")
-            }, 3000);
+            console.log(error.response);
+            // setError(error.response.data.msg)
+            // setTimeout(() => {
+            //     setError("")
+            // }, 3000);
         }
     }
 

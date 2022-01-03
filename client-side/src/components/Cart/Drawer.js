@@ -1,29 +1,30 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import { useGlobalContext } from '../../context'
 import axios from 'axios'
 import "./Drawer.scss"
 
-const url = "http://localhost:5000/api/v1/cart"
+const url = "http://localhost:5000/api/v1"
 
 const Drawer = ({history}) => {
     const {dispatch, cart, cartTotal, setCartTotal, errorCartProducts, setIsCartOpen, setItemFromCartId} = useGlobalContext()
-
 
     useEffect(() => {
         if (!localStorage.getItem("authToken")) {
             return history.push("/login")
         }
     }, [history, dispatch])
-
-
+    
+    console.log(cart);
 
     useEffect(() => {
-        const sum = cart.reduce((total, current) => {
-            total += current.product.price
-            return total
-        }, 0)
-        setCartTotal(sum)
-    }, [cart, setCartTotal])
+        if (!errorCartProducts && cart.choosedProducts.length > 0) {
+            const sum = cart.choosedProducts.reduce((total, current) => {
+                total += Number(current.totalPrice)
+                return total
+            }, 0)
+            setCartTotal(sum)
+        }
+    }, [cart.choosedProducts, setCartTotal, errorCartProducts])
 
     const deleteItemFromCartHandler = async (product) => {
         console.log(product);
@@ -34,14 +35,16 @@ const Drawer = ({history}) => {
             }
         }
         try {
-            const {data} = await axios.delete(url + `/${product._id}`, config)
-            setCartTotal(prev => prev - product.product.price)
-            setItemFromCartId(product._id)    // IT IS VERY IMPORTANT WHERE TO PUT FUNCTIONS !!!!!!!!!!!!!!!
-            dispatch({type: "DELETE_FROM_CART", data})
+            const {data} = await axios.delete(url + `/cart/${product._id}`, config)
+            // console.log(data);
+                setCartTotal(prev => prev - product.totalPrice)
+            //     setItemFromCartId(product._id)    // IT IS VERY IMPORTANT WHERE TO PUT FUNCTIONS !!!!!!!!!!!!!!!
+            dispatch({type: "GET_CART", data})
         } catch (error) {
-            console.log(error);
+            console.log(error.response);
         }
     }
+    
 
     return (
         <div className="overlay">
@@ -52,16 +55,30 @@ const Drawer = ({history}) => {
                 </div>
 
                 <div className="cart-block">
-                    {errorCartProducts || cart.map((item) => {
-                        const {product} = item
-                        const {name, price, company, img} = product
+                    {errorCartProducts || cart.choosedProducts.length < 1 ? <p>There is no product in the cart..</p> 
+                    :
+                    cart.choosedProducts && cart.choosedProducts.map((item) => {
+                        console.log(item);
+                        const {company, img, name, price} = item.productId
+
                         return (
-                            <div className="cart-item" key = {item._id}>
+                            <div className="cart-item border border-red-500" key = {item._id}>
                                 <img src={img} alt="" />
-                                <div>
+                                <div className=''>
                                     <p>{name}</p>
                                     <p>{company}</p>
                                     <p><b>${price}</b></p>
+                                    {item.attributes.map(item => {
+                                        // console.log(item);
+                                        if (item.name === "color") {
+                                            return <p className='mr-4 flex items-center gap-2' key = {item._id}>{item.name}: <span className="block w-4 h-4 rounded-full" style={{background:`${item.value}`}}></span></p>
+                                        }
+                                        return (
+                                            <p className='mr-4' key = {item._id}>{item.name}: {item.value}</p>
+                                        )
+                                    })}
+                                    <p>qnt: {item.qnt}</p>
+                                    <p>total: {item.totalPrice}</p>
                                 </div>
                                 <button onClick = {() => deleteItemFromCartHandler(item)}>x</button>
                             </div>
