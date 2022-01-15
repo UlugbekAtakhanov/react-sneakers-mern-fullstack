@@ -1,5 +1,5 @@
 const mongoose = require("mongoose")
-const AttrValue = require("./Attributes/AttrValue")
+const Attribute = require("./Attributes/Attribute")
 
 
 const productSchema = new mongoose.Schema({
@@ -20,13 +20,18 @@ const productSchema = new mongoose.Schema({
         required: true
     },
     
-    attributes: [],
+    attributes: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: Attribute
+        }
+    ],
 
-    createdAt: {
-        type: Date,
-        default: Date.now()
-    }
-})
+
+
+
+    
+}, { timestamps: true })
 
 module.exports = mongoose.model("Product", productSchema)
 

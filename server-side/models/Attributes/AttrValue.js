@@ -1,7 +1,11 @@
 const mongoose = require("mongoose")
+const Attribute = require("./Attribute")
 
 const attrValueSchema = new mongoose.Schema({
-    name: String,
+    attrId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Attribute"
+    },
     value: String
 })
 

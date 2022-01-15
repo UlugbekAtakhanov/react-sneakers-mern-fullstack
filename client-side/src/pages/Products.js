@@ -1,23 +1,31 @@
 import React, {useEffect, useState} from 'react'
 import {useNavigate} from "react-router-dom"
+
+import {useDispatch, useSelector} from "react-redux"
+import { getAllProducts } from '../redux/AllProducts/apiCalls';
+
+import axios from 'axios'
+
 import Card from "../components/Card/Card";
 import Drawer from '../components/Cart/Drawer';
 import Header from '../components/Header/Header';
-import {useGlobalContext} from '../context'
-import axios from 'axios'
 
-const url = "http://localhost:5000/api/v1/"
+// const url = "http://localhost:5000/api/v1/"
 
-const Home = ({history}) => {
+const Home = () => {
     const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const {allProducts, allProductsError, isLoading} = useSelector(state => state.allProducts)
 
-    const {search, isCartOpen, allProducts, dispatch, errorAllProducts} = useGlobalContext()
+    console.log(allProducts);
+
     const [searchTerm, setSearchTerm] = useState("")
+    const [search, setSearch] = useState("")
 
 
     useEffect(() => {
         const fetchAllProducts = async () => {
-            const token = localStorage.getItem("authToken")
+            const token = localStorage.getItem("authTokenReactSneakers")
             if (!token) {
                 return navigate("/login")
             }
@@ -26,83 +34,73 @@ const Home = ({history}) => {
                     Authorization: `Bearer ${token}`
                 }
             }
-
             if (token) {
-                try {
-                    const { data } = await axios.get(url + `/products?name=${search}`, config)
-                    if (!data.length) {
-                        return dispatch({type: "ERROR_ALL_PRODUCTS", msg: "There is no item left.."})
-                    }
-                    dispatch({type: "GET_ALL_PRODUCTS", data})
-                    
-                } catch (error) {
-                    console.log(error);
-                }
+                getAllProducts(config, dispatch, search)
             }
         }
         
         fetchAllProducts()
-    }, [dispatch, navigate, search])
+    }, [navigate, search])
 
-    useEffect(() => {
-        const fetchCartProducts = async () => {
-            const token = localStorage.getItem("authToken")
-            const config = {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            }
-            if (token) {
-                try {
-                    const data = await axios.get(url + "/cart", config)
-                    const cartProductFromDB = data.data
-                    // console.log(cartProductFromDB);
-                    dispatch({type: "GET_CART", data:cartProductFromDB})
-                } catch (error) {
-                    console.log(error.response);
-                    dispatch({type: "ERROR_CART_PRODUCTS", msg: error.response.data.msg})
-                }
-            }
-        }
-        fetchCartProducts()
-    }, [dispatch])
+//     // useEffect(() => {
+//     //     const fetchCartProducts = async () => {
+//     //         const token = localStorage.getItem("authTokenReactSneakers")
+//     //         const config = {
+//     //             headers: {
+//     //                 Authorization: `Bearer ${token}`
+//     //             }
+//     //         }
+//     //         if (token) {
+//     //             try {
+//     //                 const data = await axios.get(url + "/cart", config)
+//     //                 const cartProductFromDB = data.data
+//     //                 // console.log(cartProductFromDB);
+//     //                 dispatch({type: "GET_CART", data:cartProductFromDB})
+//     //             } catch (error) {
+//     //                 console.log(error.response);
+//     //                 dispatch({type: "ERROR_CART_PRODUCTS", msg: error.response.data.msg})
+//     //             }
+//     //         }
+//     //     }
+//     //     fetchCartProducts()
+//     // }, [dispatch])
 
-    useEffect(() => {
-        const fetchFavoriteProducts = async () => {
-            const token = localStorage.getItem("authToken")
-            const config = {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            }
-            if (token) {
-                try {
-                    const {data} = await axios.get(url + "/favorites", config)
-                    // console.log(data);
-                    dispatch({type: "GET_ALL_FAVORITES", data})
-                } catch (error) {
-                    console.log(error);
-                }
-            }
-        }
-        fetchFavoriteProducts()
-    }, [dispatch])
+//     // useEffect(() => {
+//     //     const fetchFavoriteProducts = async () => {
+//     //         const token = localStorage.getItem("authTokenReactSneakers")
+//     //         const config = {
+//     //             headers: {
+//     //                 Authorization: `Bearer ${token}`
+//     //             }
+//     //         }
+//     //         if (token) {
+//     //             try {
+//     //                 const {data} = await axios.get(url + "/favorites", config)
+//     //                 // console.log(data);
+//     //                 dispatch({type: "GET_ALL_FAVORITES", data})
+//     //             } catch (error) {
+//     //                 console.log(error);
+//     //             }
+//     //         }
+//     //     }
+//     //     fetchFavoriteProducts()
+//     // }, [dispatch])
 
     useEffect(() => {
         const time = setTimeout(() => {
-            dispatch({type: "SEARCH", searchTerm})
+            setSearch(searchTerm)
         }, 1000);
         return () => {
             clearTimeout(time)
         }
-    }, [searchTerm, dispatch])
-
+    }, [searchTerm])
 
 
     return (
         <>
-            <Header history = {history} />
-            {isCartOpen && <Drawer />}
+            <Header />
+            {isLoading ? <h2 className='p-4'>Loading...</h2>
+            :
             <div className="products-container">
 
                 <div className="header-container">
@@ -116,12 +114,13 @@ const Home = ({history}) => {
                 </div>
 
                 <div className="card-container">
-                    {errorAllProducts || (allProducts  && allProducts.map(item => {
+                    {allProductsError || (allProducts  && allProducts.map(item => {
                         return <Card item = {item} key = {item._id} />
                     }))}
                 </div>
 
             </div>
+            }
         </>
     )
 }

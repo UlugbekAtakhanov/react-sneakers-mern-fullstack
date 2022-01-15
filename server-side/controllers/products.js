@@ -4,53 +4,95 @@ const {NotFoundError, BadRequestError} = require("../errors")
 const CartForUser = require("../models/Cart/CartForUser")
 const CartProduct = require("../models/Cart/CartProduct")
 const AttrValue = require("../models/Attributes/AttrValue")
+const Attribute = require("../models/Attributes/Attribute")
+const Income = require("../models/Income")
 
 
-
+// ADD PRODUCT
 const addProduct = async (req, res) => {
     req.body.image = `http://localhost:5000/server-side/images/${req.file.filename}`
+
+    const {name, company, price, image, attributes} = req.body
+    const parsedAttr = JSON.parse(attributes)
+    const createdProduct = await Product.create({name, company, price, image})
+
+    if (parsedAttr.length > 0) {
+        const createAttrPromise = parsedAttr.map(item => {
+            return Attribute.create({productId: createdProduct._id, name: item})
+        })
+        const createdAttr = await Promise.all(createAttrPromise)
+        if (createdAttr.length > 0) {
+            createdAttr.map(async (item) => {
+                await Product.findByIdAndUpdate(createdProduct._id, {$push: {attributes: item._id}})
+            })
+        }
+    }
+    const allProducts = await Product.find({})
+    res.status(StatusCodes.OK).json(allProducts)
+}
+
+// // ADD INCOME TO SPEC PRODUCT
+// const addIncome = async (req, res) => {
+//     const {productId, quantity, attributes} = req.body
+//     if (attributes.length > 0) {
+//         const createAttrValue = attributes.map(async (item) => {
+//             const attrId = await Attribute.findOne({name: item[0]})
+//             return await AttrValue.create({attrId: attrId._id, value: item[1]})
+//         })
+//         const attrValueArr = await Promise.all(createAttrValue)
+//         const income = await Income.create({productId, quantity, attrValue: []})
+//         attrValueArr.map(  async (item) => {
+//             await  Income.findByIdAndUpdate(income._id, {$push: {attrValue: item._id}}, {new: true})
+//         })
+//     }
+//     const allIncome = await Income.find({productId}).populate({path: "attrValue"})
+//     res.status(200).json(allIncome)
+// }
+
+// UPDATE SINGLE PRODUCT
+const updateSingleProduct = async (req, res) => {
+    // const productId = req.params
+    // if (req.file && req.file.filename) {
+    //     req.body.image = `http://localhost:5000/server-side/images/${req.file.filename}`
+    // }
     // const {name, company, price, image, attributes} = req.body
 
     // const parsedAttr = JSON.parse(attributes)
-
-    // const AttrIdArray = parsedAttr.map( async (itemAttr) => {
-    //     // color attr
-    //     const colorAttrValue = await AttrValue.findOne({value: itemAttr.color})
-    //     let colorAttrValueId = colorAttrValue && colorAttrValue._id
-    //     if (!colorAttrValue) {
-    //         const createColorAttrValue = await AttrValue.create({name: "color", value: itemAttr.color})
-    //         colorAttrValueId = createColorAttrValue._id
-    //     }
-
-    //     // size attr
-    //     const sizeAttrValue = await AttrValue.findOne({value: itemAttr.size})
-    //     let sizeAttrValueId = sizeAttrValue && sizeAttrValue._id
-    //     if (!sizeAttrValue) {
-    //         const createSizeAttrValue = await AttrValue.create({name: "size", value: itemAttr.size})
-    //         sizeAttrValueId = createSizeAttrValue._id
-    //     }
-
-    //     if (colorAttrValueId && sizeAttrValueId) {
-    //         return {color: colorAttrValueId, size: sizeAttrValueId, qnt: itemAttr.amount}
-    //     }
-    //     return null
-    // })
-
-    // const attrArr = await Promise.all(AttrIdArray)
-    const newProduct = await Product.create(req.body)
-    res.status(StatusCodes.OK).json(newProduct)
-    
-    // if (attrArr) {
-    //     const productObj = {image, name, company, price, attributes: attrArr}
-        
-
-    //     if (newProduct) {
-    //         const products = await Product.find({})
-    //     }
+    // const arrObj = Object.entries(parsedAttr)
+    // if (arrObj.length < 1) {
+    //     const updatedProduct = await Product.findByIdAndUpdate(productId.id, {name, company, price, image}, {new: true}).populate({path: "attributes"})
+    //     return res.status(StatusCodes.OK).json(updatedProduct)
     // }
 
-}
+    // const attrIdArr = arrObj.map(async (obj) => {
+    //     const attrValue = await AttrValue.findOne({name: obj[0], value: obj[1]})
+    //     let attrValueId = attrValue && attrValue._id
+    //     if (!attrValue) {
+    //         const createAttrValue = await AttrValue.create({name: obj[0], value: obj[1]})
+    //         attrValueId = createAttrValue && createAttrValue._id
+    //     }
+    //     return attrValueId
+    // })
+    // const newAttrIdArray = await Promise.all(attrIdArr)
+        
+    // const checkedByProductId = await Attribute.findOne({productId: productId.id})
 
+    // if (!checkedByProductId) {
+    //     const newAttr = await Attribute.create({productId: productId.id, attributes: newAttrIdArray})
+    //     if (newAttr) {
+    //         return await Product.findByIdAndUpdate(productId.id, {name, company, price, image, $push: {attributes: newAttr._id}}, {new: true})
+    //     }
+    // }
+    // const updatedAttr = await Attribute.findByIdAndUpdate(checkedByProductId._id, {$push: {attributes: newAttrIdArray}}, {new: true})
+    // if (updatedAttr) {
+    //     const updatedProduct = await Product.findByIdAndUpdate(productId.id, {name, company, price, image}, {new: true}).populate({path: "attributes"})
+    //     res.status(StatusCodes.OK).json(updatedProduct)
+    // }
+    
+}
+// .populate({path: "attributes", populate: {path: "attributes", model: "AttrValue"}}) IMPORTANT
+
+// GET ALL PRODUCTS
 const getAllProducts = async (req, res) => {
     const {name} = req.query
     let queryObject = {}
@@ -59,13 +101,10 @@ const getAllProducts = async (req, res) => {
         queryObject.name = {$regex: name, $options: "i"}
     }
 
-
     let result = Product.find(queryObject)
     
-    // result = result
     const products = await result
-
-    if (!products) {
+    if (products.length < 1) {
         throw new NotFoundError("There is no item left..")
     }
 
@@ -76,7 +115,7 @@ const getAllProducts = async (req, res) => {
 const getSingleProduct = async (req, res) => {
     const id = req.params.id
     const product = await Product.findById(id).populate({path: "attributes"})
-
+    // const attributes = await Income.find({productId: product._id}).populate({path: "attrValue", populate: {path: "attrId", model: "Attribute"}})
     res.status(StatusCodes.OK).json(product)
 }
 
@@ -149,6 +188,7 @@ module.exports = {
     getAllProducts,
     addProduct,
     getSingleProduct,
+    updateSingleProduct,
     addToCart,
     getCart,
     deleteItemFromCart,
